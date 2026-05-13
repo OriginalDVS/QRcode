@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Кредит Т-Банк</title>
+<title>Кредитные ссылки</title>
 <style>
-  /* Фирменные цвета и базовые настройки */
   :root {
     --tbank-yellow: #ffdd2d;
     --tbank-black: #333333;
+    --otp-green: #007D32;
     --bg-color: #f4f4f9;
   }
   
@@ -20,27 +20,54 @@
     color: var(--tbank-black);
   }
   
-  /* Шапка в стиле Т-Банка */
-  header {
-    background-color: var(--tbank-yellow);
-    color: var(--tbank-black);
+  /* Заголовки банков */
+  .bank-header {
     text-align: center;
     padding: 25px 20px;
     font-size: 32px;
     font-weight: 900;
     letter-spacing: 1px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-top: 40px;
+  }
+  
+  .bank-header.tbank {
+    background-color: var(--tbank-yellow);
+    color: var(--tbank-black);
+    margin-top: 0; /* Убираем отступ для самого первого заголовка */
+  }
+  
+  .bank-header.otp {
+    background-color: var(--otp-green);
+    color: #ffffff;
+  }
+
+  /* Подзаголовки (разделение на с ценой / без цены) */
+  .section-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #555;
+    margin: 30px 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   
   /* Сетка для блоков */
   .container {
     max-width: 1300px;
-    margin: 40px auto;
+    margin: 20px auto 40px auto;
     padding: 0 20px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
+  }
+
+  /* Контейнер для одиночных блоков (чтобы были по центру) */
+  .container-center {
+    display: flex;
+    justify-content: center;
   }
   
   /* Карточка кредита */
@@ -50,6 +77,9 @@
     text-align: center;
     box-shadow: 0 5px 20px rgba(0,0,0,0.06);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    max-width: 400px; /* Ограничиваем ширину для центрированных */
+    box-sizing: border-box;
   }
   
   .card:hover {
@@ -58,7 +88,7 @@
   }
   
   .card-title {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 800;
     margin-bottom: 20px;
     color: var(--tbank-black);
@@ -76,14 +106,13 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   }
   
-  /* Контейнер для кнопок */
+  /* Кнопки */
   .buttons {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
   
-  /* Общий стиль кнопок */
   .btn {
     border: none;
     padding: 14px 20px;
@@ -97,29 +126,48 @@
     color: #ffffff;
   }
   
-  /* Кнопка скачивания */
-  .btn-download {
-    background-color: #4CAF50; /* Зеленая */
-  }
+  .btn-download { background-color: #4CAF50; }
   .btn-download:hover { background-color: #45a049; }
   
-  /* Кнопка копирования */
-  .btn-copy {
-    background-color: var(--tbank-black); /* Темная */
-  }
+  .btn-copy { background-color: var(--tbank-black); }
   .btn-copy:hover { background-color: #1a1a1a; }
   
 </style>
 </head>
 <body>
 
-<header>Кредит Т-Банк</header>
+<!-- ================= Т-БАНК ================= -->
+<header class="bank-header tbank">Т-Банк</header>
 
-<div class="container" id="cards-container"></div>
+<div class="section-title">Общая ссылка (Без фиксированной суммы)</div>
+<div class="container container-center" id="tbank-noprice-container"></div>
+
+<div class="section-title">Фиксированные суммы</div>
+<div class="container" id="tbank-priced-container"></div>
+
+<!-- ================= ОТП БАНК ================= -->
+<header class="bank-header otp">ОТП Банк</header>
+
+<div class="section-title">Общая ссылка (Без фиксированной суммы)</div>
+<div class="container container-center" id="otp-noprice-container"></div>
+
 
 <script>
-  // Твой список кредитов с суммами и ссылками
-  const credits = [
+  // 1. ДАННЫЕ ДЛЯ ОБЩИХ ССЫЛОК (Ссылки обновлены)
+  const tbankNoPrice = {
+    title: "ЛЮБАЯ СУММА",
+    image: "NoPriceTbank.jpg",
+    link: "https://forma.tbank.ru/online/create-order?qrId=a8846b2f-6f3e-408b-9757-5933ff45aba6"
+  };
+
+  const otpNoPrice = {
+    title: "ЛЮБАЯ СУММА",
+    image: "NoPriceOTPbank.jpg",
+    link: "https://ecom.otpbank.ru/smart-form?config=bdbc161b-3e79-4af0-ac05-1aaea7b5445f"
+  };
+
+  // 2. ДАННЫЕ ДЛЯ ФИКСИРОВАННЫХ СУММ Т-БАНКА
+  const tbankCredits = [
     { amount: "112350", link: "https://link.tinkoff.ru/8YkfWTZgFRZ" },
     { amount: "181900", link: "https://link.tinkoff.ru/9gBjdhbrrWr" },
     { amount: "123050", link: "https://link.tinkoff.ru/6WYUn1qL9AQ" },
@@ -137,45 +185,46 @@
     { amount: "119840", link: "https://link.tinkoff.ru/7zRt40FIyrR" }
   ];
 
-  // СОРТИРОВКА: выстраиваем массив по увеличению суммы
-  credits.sort((a, b) => Number(a.amount) - Number(b.amount));
+  // Сортировка по увеличению цены
+  tbankCredits.sort((a, b) => Number(a.amount) - Number(b.amount));
 
-  // Массив разных приятных цветов для фона блоков
-  const colors = [
-    '#FFE4E1', // Розоватый
-    '#E0FFFF', // Голубоватый
-    '#F0FFF0', // Светло-зеленый
-    '#FFFACD', // Светло-желтый
-    '#E6E6FA', // Лавандовый
-    '#FFDAB9', // Персиковый
-    '#F0F8FF', // Небесный
-    '#FFF0F5'  // Бледно-пурпурный
-  ];
+  // Палитра приятных цветов для карточек
+  const colors = ['#FFE4E1', '#E0FFFF', '#F0FFF0', '#FFFACD', '#E6E6FA', '#FFDAB9', '#F0F8FF', '#FFF0F5'];
 
-  const container = document.getElementById('cards-container');
-
-  // Перебираем отсортированный список и создаем HTML для каждой карточки
-  credits.forEach((credit, index) => {
-    const bgColor = colors[index % colors.length];
-    
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.style.backgroundColor = bgColor;
-
-    card.innerHTML = `
-      <div class="card-title">${credit.amount} РУБЛЕЙ</div>
-      <img src="${credit.amount}.jpg" alt="QR ${credit.amount}" class="qr-image" 
-           onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'><rect width=\\'200\\' height=\\'200\\' fill=\\'%23eaeaea\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' font-family=\\'Arial\\' font-size=\\'16\\' fill=\\'%23666\\'>Фото не найдено</text></svg>'">
-      <div class="buttons">
-        <a href="${credit.amount}.jpg" download="${credit.amount}.jpg" class="btn btn-download">Скачать фото QR</a>
-        <button class="btn btn-copy" onclick="copyLink('${credit.link}', this)">Скопировать ссылку</button>
+  // Универсальная функция для создания карточки (чтобы не дублировать код)
+  function createCardHTML(title, imageSrc, link, bgColor) {
+    return `
+      <div class="card" style="background-color: ${bgColor}">
+        <div class="card-title">${title}</div>
+        <img src="${imageSrc}" alt="QR" class="qr-image" 
+             onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'><rect width=\\'200\\' height=\\'200\\' fill=\\'%23eaeaea\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' font-family=\\'Arial\\' font-size=\\'16\\' fill=\\'%23666\\'>Фото не найдено</text></svg>'">
+        <div class="buttons">
+          <a href="${imageSrc}" download="${imageSrc}" class="btn btn-download">Скачать фото QR</a>
+          <button class="btn btn-copy" onclick="copyLink('${link}', this)">Скопировать ссылку</button>
+        </div>
       </div>
     `;
+  }
+
+  // 1. Отрисовываем Т-Банк "Без цены" (используем белый или серый цвет, чтобы выделялся)
+  document.getElementById('tbank-noprice-container').innerHTML = 
+    createCardHTML(tbankNoPrice.title, tbankNoPrice.image, tbankNoPrice.link, '#ffffff');
+
+  // 2. Отрисовываем сетку кредитов Т-Банка с ценами
+  const tbankPricedContainer = document.getElementById('tbank-priced-container');
+  tbankCredits.forEach((credit, index) => {
+    const bgColor = colors[index % colors.length];
+    const title = `${credit.amount} РУБЛЕЙ`;
+    const imageSrc = `${credit.amount}.jpg`;
     
-    container.appendChild(card);
+    tbankPricedContainer.innerHTML += createCardHTML(title, imageSrc, credit.link, bgColor);
   });
 
-  // Функция для копирования ссылки в буфер обмена
+  // 3. Отрисовываем ОТП Банк "Без цены"
+  document.getElementById('otp-noprice-container').innerHTML = 
+    createCardHTML(otpNoPrice.title, otpNoPrice.image, otpNoPrice.link, '#ffffff');
+
+  // Функция копирования в буфер обмена
   function copyLink(link, btnElement) {
     navigator.clipboard.writeText(link).then(() => {
       const originalText = btnElement.innerText;
@@ -187,7 +236,7 @@
         btnElement.style.backgroundColor = ''; 
       }, 2000);
     }).catch(err => {
-      alert('Ошибка копирования. Выделите и скопируйте эту ссылку вручную: ' + link);
+      alert('Ошибка копирования. Скопируйте ссылку вручную: ' + link);
     });
   }
 </script>
