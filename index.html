@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кредит Т-Банк</title>
+<style>
+  /* Фирменные цвета и базовые настройки */
+  :root {
+    --tbank-yellow: #ffdd2d;
+    --tbank-black: #333333;
+    --bg-color: #f4f4f9;
+  }
+  
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    color: var(--tbank-black);
+  }
+  
+  /* Шапка в стиле Т-Банка */
+  header {
+    background-color: var(--tbank-yellow);
+    color: var(--tbank-black);
+    text-align: center;
+    padding: 25px 20px;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-transform: uppercase;
+  }
+  
+  /* Сетка для блоков */
+  .container {
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+  }
+  
+  /* Карточка кредита */
+  .card {
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  
+  .card-title {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--tbank-black);
+  }
+  
+  /* Настройки фото QR-кода */
+  .qr-image {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    background-color: #ffffff;
+    border-radius: 16px;
+    margin: 0 auto 20px auto;
+    display: block;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  /* Контейнер для кнопок */
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  /* Общий стиль кнопок */
+  .btn {
+    border: none;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: block;
+    color: #ffffff;
+  }
+  
+  /* Кнопка скачивания */
+  .btn-download {
+    background-color: #4CAF50; /* Зеленая */
+  }
+  .btn-download:hover { background-color: #45a049; }
+  
+  /* Кнопка копирования */
+  .btn-copy {
+    background-color: var(--tbank-black); /* Темная */
+  }
+  .btn-copy:hover { background-color: #1a1a1a; }
+  
+</style>
+</head>
+<body>
+
+<header>Кредит Т-Банк</header>
+
+<!-- Сюда с помощью JavaScript добавятся все цветные карточки -->
+<div class="container" id="cards-container"></div>
+
+<script>
+  // Твой список кредитов с суммами и ссылками
+  const credits = [
+    { amount: "112350", link: "https://link.tinkoff.ru/8YkfWTZgFRZ" },
+    { amount: "181900", link: "https://link.tinkoff.ru/9gBjdhbrrWr" },
+    { amount: "123050", link: "https://link.tinkoff.ru/6WYUn1qL9AQ" },
+    { amount: "192600", link: "https://link.tinkoff.ru/5eIUCw5IM9c" },
+    { amount: "139100", link: "https://link.tinkoff.ru/6HkwGufeE6" },
+    { amount: "219350", link: "https://link.tinkoff.ru/486EqSsHQ28" },
+    { amount: "165850", link: "https://link.tinkoff.ru/616Kw8kVDn" },
+    { amount: "80250",  link: "https://link.tinkoff.ru/8SFOkjJHSfF" },
+    { amount: "176550", link: "https://link.tinkoff.ru/2Tir6Bs05QV" },
+    { amount: "144450", link: "https://link.tinkoff.ru/7n9yGtOcNgQ" },
+    { amount: "138030", link: "https://link.tinkoff.ru/8KBjQxxLFW9" },
+    { amount: "230050", link: "https://link.tinkoff.ru/5Ro02CnvArJ" },
+    { amount: "149800", link: "https://link.tinkoff.ru/2XP1KLsoZq2" },
+    { amount: "224700", link: "https://link.tinkoff.ru/951FCyDKA7S" },
+    { amount: "119840", link: "https://link.tinkoff.ru/7zRt40FIyrR" }
+  ];
+
+  // Массив разных приятных цветов для фона блоков (чтобы не путать их)
+  const colors = [
+    '#FFE4E1', // Розоватый
+    '#E0FFFF', // Голубоватый
+    '#F0FFF0', // Светло-зеленый
+    '#FFFACD', // Светло-желтый
+    '#E6E6FA', // Лавандовый
+    '#FFDAB9', // Персиковый
+    '#F0F8FF', // Небесный
+    '#FFF0F5'  // Бледно-пурпурный
+  ];
+
+  const container = document.getElementById('cards-container');
+
+  // Перебираем список и создаем HTML для каждой карточки
+  credits.forEach((credit, index) => {
+    // Берем цвет из массива по очереди
+    const bgColor = colors[index % colors.length];
+    
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.backgroundColor = bgColor;
+
+    // Вставляем структуру карточки
+    // onerror нужен, чтобы если фото нет, показывался серый квадрат с текстом "Нет фото", а не сломанная картинка
+    card.innerHTML = `
+      <div class="card-title">${credit.amount} РУБЛЕЙ</div>
+      <img src="${credit.amount}.jpg" alt="QR ${credit.amount}" class="qr-image" 
+           onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'><rect width=\\'200\\' height=\\'200\\' fill=\\'%23eaeaea\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' font-family=\\'Arial\\' font-size=\\'16\\' fill=\\'%23666\\'>Фото не найдено</text></svg>'">
+      <div class="buttons">
+        <a href="${credit.amount}.jpg" download="${credit.amount}.jpg" class="btn btn-download">Скачать фото QR</a>
+        <button class="btn btn-copy" onclick="copyLink('${credit.link}', this)">Скопировать ссылку</button>
+      </div>
+    `;
+    
+    container.appendChild(card);
+  });
+
+  // Функция для копирования ссылки в буфер обмена
+  function copyLink(link, btnElement) {
+    navigator.clipboard.writeText(link).then(() => {
+      // Меняем текст и цвет кнопки, чтобы показать, что скопировалось
+      const originalText = btnElement.innerText;
+      btnElement.innerText = '✅ Скопировано!';
+      btnElement.style.backgroundColor = '#4CAF50'; 
+      
+      // Возвращаем как было через 2 секунды
+      setTimeout(() => {
+        btnElement.innerText = originalText;
+        btnElement.style.backgroundColor = ''; 
+      }, 2000);
+    }).catch(err => {
+      alert('Ошибка копирования. Выделите и скопируйте эту ссылку вручную: ' + link);
+    });
+  }
+</script>
+</body>
+</html>
