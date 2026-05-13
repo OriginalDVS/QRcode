@@ -17,156 +17,135 @@
     background-color: var(--bg-color);
     margin: 0;
     padding: 0;
+    padding-top: 70px; /* Отступ под фиксированное меню */
     color: var(--tbank-black);
-  }
-  
-  /* Заголовки банков */
-  .bank-header {
-    text-align: center;
-    padding: 25px 20px;
-    font-size: 32px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    margin-top: 40px;
-  }
-  
-  .bank-header.tbank {
-    background-color: var(--tbank-yellow);
-    color: var(--tbank-black);
-    margin-top: 0; /* Убираем отступ для самого первого заголовка */
-  }
-  
-  .bank-header.otp {
-    background-color: var(--otp-green);
-    color: #ffffff;
   }
 
-  /* Подзаголовки (разделение на с ценой / без цены) */
+  /* Фиксированное меню переключения */
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+    height: 60px;
+  }
+
+  .nav-btn {
+    flex: 1;
+    border: none;
+    background: #eee;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+
+  .nav-btn.tbank-btn.active { background-color: var(--tbank-yellow); color: #000; }
+  .nav-btn.otp-btn.active { background-color: var(--otp-green); color: #fff; }
+
+  /* Скрытие неактивных секций */
+  .bank-section { display: none; padding-bottom: 50px; }
+  .bank-section.active { display: block; }
+
+  /* Заголовки */
   .section-title {
     text-align: center;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 700;
-    color: #555;
-    margin: 30px 0 10px 0;
+    color: #777;
+    margin: 25px 0 15px 0;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
   }
   
-  /* Сетка для блоков */
+  /* Сетка */
   .container {
-    max-width: 1300px;
-    margin: 20px auto 40px auto;
-    padding: 0 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
   }
 
-  /* Контейнер для одиночных блоков (чтобы были по центру) */
-  .container-center {
-    display: flex;
-    justify-content: center;
-  }
+  .container-center { display: flex; justify-content: center; }
   
-  /* Карточка кредита */
+  /* Карточка */
   .card {
     border-radius: 20px;
-    padding: 25px;
+    padding: 20px;
     text-align: center;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     width: 100%;
-    max-width: 400px; /* Ограничиваем ширину для центрированных */
+    max-width: 350px;
     box-sizing: border-box;
   }
   
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  }
-  
   .card-title {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 800;
-    margin-bottom: 20px;
-    color: var(--tbank-black);
+    margin-bottom: 15px;
   }
   
-  /* Настройки фото QR-кода */
   .qr-image {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
     object-fit: contain;
-    background-color: #ffffff;
-    border-radius: 16px;
-    margin: 0 auto 20px auto;
-    display: block;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 15px;
   }
   
-  /* Кнопки */
-  .buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+  .buttons { display: flex; flex-direction: column; gap: 10px; }
   
   .btn {
     border: none;
-    padding: 14px 20px;
-    border-radius: 12px;
-    font-size: 16px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s;
     text-decoration: none;
-    display: block;
-    color: #ffffff;
+    color: #fff;
   }
   
   .btn-download { background-color: #4CAF50; }
-  .btn-download:hover { background-color: #45a049; }
-  
   .btn-copy { background-color: var(--tbank-black); }
-  .btn-copy:hover { background-color: #1a1a1a; }
   
 </style>
 </head>
 <body>
 
-<!-- ================= Т-БАНК ================= -->
-<header class="bank-header tbank">Т-Банк</header>
+<!-- Навигация -->
+<nav class="nav-menu">
+  <button class="nav-btn tbank-btn active" onclick="showBank('tbank')">Т-Банк</button>
+  <button class="nav-btn otp-btn" onclick="showBank('otp')">ОТП Банк</button>
+</nav>
 
-<div class="section-title">Общая ссылка (Без фиксированной суммы)</div>
-<div class="container container-center" id="tbank-noprice-container"></div>
+<!-- Секция Т-Банк -->
+<div id="section-tbank" class="bank-section active">
+  <div class="section-title">Т-Банк: Любая сумма</div>
+  <div class="container container-center" id="tbank-noprice"></div>
+  
+  <div class="section-title">Т-Банк: Фиксированные суммы</div>
+  <div class="container" id="tbank-priced"></div>
+</div>
 
-<div class="section-title">Фиксированные суммы</div>
-<div class="container" id="tbank-priced-container"></div>
-
-<!-- ================= ОТП БАНК ================= -->
-<header class="bank-header otp">ОТП Банк</header>
-
-<div class="section-title">Общая ссылка (Без фиксированной суммы)</div>
-<div class="container container-center" id="otp-noprice-container"></div>
-
+<!-- Секция ОТП Банк -->
+<div id="section-otp" class="bank-section">
+  <div class="section-title">ОТП Банк: Любая сумма</div>
+  <div class="container container-center" id="otp-noprice"></div>
+</div>
 
 <script>
-  // 1. ДАННЫЕ ДЛЯ ОБЩИХ ССЫЛОК (Ссылки обновлены)
-  const tbankNoPrice = {
-    title: "ЛЮБАЯ СУММА",
-    image: "NoPriceTbank.jpg",
-    link: "https://forma.tbank.ru/online/create-order?qrId=a8846b2f-6f3e-408b-9757-5933ff45aba6"
-  };
+  // Ссылки
+  const tbankLinkNoPrice = "https://forma.tbank.ru/online/create-order?qrId=a8846b2f-6f3e-408b-9757-5933ff45aba6";
+  const otpLinkNoPrice = "https://ecom.otpbank.ru/smart-form?config=bdbc161b-3e79-4af0-ac05-1aaea7b5445f";
 
-  const otpNoPrice = {
-    title: "ЛЮБАЯ СУММА",
-    image: "NoPriceOTPbank.jpg",
-    link: "https://ecom.otpbank.ru/smart-form?config=bdbc161b-3e79-4af0-ac05-1aaea7b5445f"
-  };
-
-  // 2. ДАННЫЕ ДЛЯ ФИКСИРОВАННЫХ СУММ Т-БАНКА
   const tbankCredits = [
     { amount: "112350", link: "https://link.tinkoff.ru/8YkfWTZgFRZ" },
     { amount: "181900", link: "https://link.tinkoff.ru/9gBjdhbrrWr" },
@@ -185,58 +164,47 @@
     { amount: "119840", link: "https://link.tinkoff.ru/7zRt40FIyrR" }
   ];
 
-  // Сортировка по увеличению цены
   tbankCredits.sort((a, b) => Number(a.amount) - Number(b.amount));
 
-  // Палитра приятных цветов для карточек
   const colors = ['#FFE4E1', '#E0FFFF', '#F0FFF0', '#FFFACD', '#E6E6FA', '#FFDAB9', '#F0F8FF', '#FFF0F5'];
 
-  // Универсальная функция для создания карточки (чтобы не дублировать код)
-  function createCardHTML(title, imageSrc, link, bgColor) {
+  function createCard(title, image, link, color) {
     return `
-      <div class="card" style="background-color: ${bgColor}">
+      <div class="card" style="background-color: ${color}">
         <div class="card-title">${title}</div>
-        <img src="${imageSrc}" alt="QR" class="qr-image" 
-             onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'><rect width=\\'200\\' height=\\'200\\' fill=\\'%23eaeaea\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' font-family=\\'Arial\\' font-size=\\'16\\' fill=\\'%23666\\'>Фото не найдено</text></svg>'">
+        <img src="${image}" class="qr-image" onerror="this.src='https://via.placeholder.com/200?text=Нет+фото'">
         <div class="buttons">
-          <a href="${imageSrc}" download="${imageSrc}" class="btn btn-download">Скачать фото QR</a>
-          <button class="btn btn-copy" onclick="copyLink('${link}', this)">Скопировать ссылку</button>
+          <a href="${image}" download class="btn btn-download">Скачать QR</a>
+          <button class="btn btn-copy" onclick="copyLink('${link}', this)">Копировать ссылку</button>
         </div>
       </div>
     `;
   }
 
-  // 1. Отрисовываем Т-Банк "Без цены" (используем белый или серый цвет, чтобы выделялся)
-  document.getElementById('tbank-noprice-container').innerHTML = 
-    createCardHTML(tbankNoPrice.title, tbankNoPrice.image, tbankNoPrice.link, '#ffffff');
+  // Рендер
+  document.getElementById('tbank-noprice').innerHTML = createCard("ЛЮБАЯ СУММА", "NoPriceTbank.jpg", tbankLinkNoPrice, "#fff");
+  document.getElementById('otp-noprice').innerHTML = createCard("ЛЮБАЯ СУММА", "NoPriceOTPbank.jpg", otpLinkNoPrice, "#fff");
 
-  // 2. Отрисовываем сетку кредитов Т-Банка с ценами
-  const tbankPricedContainer = document.getElementById('tbank-priced-container');
-  tbankCredits.forEach((credit, index) => {
-    const bgColor = colors[index % colors.length];
-    const title = `${credit.amount} РУБЛЕЙ`;
-    const imageSrc = `${credit.amount}.jpg`;
-    
-    tbankPricedContainer.innerHTML += createCardHTML(title, imageSrc, credit.link, bgColor);
+  const tbankPricedArea = document.getElementById('tbank-priced');
+  tbankCredits.forEach((c, i) => {
+    tbankPricedArea.innerHTML += createCard(c.amount + " ₽", c.amount + ".jpg", c.link, colors[i % colors.length]);
   });
 
-  // 3. Отрисовываем ОТП Банк "Без цены"
-  document.getElementById('otp-noprice-container').innerHTML = 
-    createCardHTML(otpNoPrice.title, otpNoPrice.image, otpNoPrice.link, '#ffffff');
+  // Переключение вкладок
+  function showBank(bank) {
+    document.querySelectorAll('.bank-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById('section-' + bank).classList.add('active');
+    document.querySelector('.' + bank + '-btn').classList.add('active');
+    window.scrollTo(0,0);
+  }
 
-  // Функция копирования в буфер обмена
-  function copyLink(link, btnElement) {
+  function copyLink(link, btn) {
     navigator.clipboard.writeText(link).then(() => {
-      const originalText = btnElement.innerText;
-      btnElement.innerText = '✅ Скопировано!';
-      btnElement.style.backgroundColor = '#4CAF50'; 
-      
-      setTimeout(() => {
-        btnElement.innerText = originalText;
-        btnElement.style.backgroundColor = ''; 
-      }, 2000);
-    }).catch(err => {
-      alert('Ошибка копирования. Скопируйте ссылку вручную: ' + link);
+      const oldText = btn.innerText;
+      btn.innerText = "✅ Готово";
+      setTimeout(() => btn.innerText = oldText, 1500);
     });
   }
 </script>
