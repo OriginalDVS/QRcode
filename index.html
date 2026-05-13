@@ -8,7 +8,7 @@
   :root {
     --tbank-yellow: #ffdd2d;
     --tbank-black: #333333;
-    --otp-green: #007D32;
+    --otp-blue: #00509d; /* Тот самый синий цвет ОТП */
     --bg-color: #f4f4f9;
   }
   
@@ -17,7 +17,7 @@
     background-color: var(--bg-color);
     margin: 0;
     padding: 0;
-    padding-top: 70px; /* Отступ под фиксированное меню */
+    padding-top: 70px; 
     color: var(--tbank-black);
   }
 
@@ -45,14 +45,15 @@
     text-transform: uppercase;
   }
 
+  /* Активные состояния кнопок */
   .nav-btn.tbank-btn.active { background-color: var(--tbank-yellow); color: #000; }
-  .nav-btn.otp-btn.active { background-color: var(--otp-green); color: #fff; }
+  .nav-btn.otp-btn.active { background-color: var(--otp-blue); color: #fff; }
 
   /* Скрытие неактивных секций */
   .bank-section { display: none; padding-bottom: 50px; }
   .bank-section.active { display: block; }
 
-  /* Заголовки */
+  /* Стили заголовков внутри секций */
   .section-title {
     text-align: center;
     font-size: 18px;
@@ -61,7 +62,7 @@
     margin: 25px 0 15px 0;
     text-transform: uppercase;
   }
-  
+
   /* Сетка */
   .container {
     max-width: 1200px;
@@ -83,6 +84,7 @@
     width: 100%;
     max-width: 350px;
     box-sizing: border-box;
+    border: 1px solid rgba(0,0,0,0.05);
   }
   
   .card-title {
@@ -98,6 +100,7 @@
     background: #fff;
     border-radius: 12px;
     margin-bottom: 15px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
   }
   
   .buttons { display: flex; flex-direction: column; gap: 10px; }
@@ -111,7 +114,10 @@
     cursor: pointer;
     text-decoration: none;
     color: #fff;
+    transition: opacity 0.2s;
   }
+
+  .btn:active { opacity: 0.7; }
   
   .btn-download { background-color: #4CAF50; }
   .btn-copy { background-color: var(--tbank-black); }
@@ -120,7 +126,7 @@
 </head>
 <body>
 
-<!-- Навигация -->
+<!-- Навигация (Всегда сверху) -->
 <nav class="nav-menu">
   <button class="nav-btn tbank-btn active" onclick="showBank('tbank')">Т-Банк</button>
   <button class="nav-btn otp-btn" onclick="showBank('otp')">ОТП Банк</button>
@@ -128,7 +134,7 @@
 
 <!-- Секция Т-Банк -->
 <div id="section-tbank" class="bank-section active">
-  <div class="section-title">Т-Банк: Любая сумма</div>
+  <div class="section-title" style="color: #b59a00;">Т-Банк: Свободная сумма</div>
   <div class="container container-center" id="tbank-noprice"></div>
   
   <div class="section-title">Т-Банк: Фиксированные суммы</div>
@@ -137,12 +143,12 @@
 
 <!-- Секция ОТП Банк -->
 <div id="section-otp" class="bank-section">
-  <div class="section-title">ОТП Банк: Любая сумма</div>
+  <div class="section-title" style="color: var(--otp-blue);">ОТП Банк: Свободная сумма</div>
   <div class="container container-center" id="otp-noprice"></div>
 </div>
 
 <script>
-  // Ссылки
+  // Ссылки (Без изменений)
   const tbankLinkNoPrice = "https://forma.tbank.ru/online/create-order?qrId=a8846b2f-6f3e-408b-9757-5933ff45aba6";
   const otpLinkNoPrice = "https://ecom.otpbank.ru/smart-form?config=bdbc161b-3e79-4af0-ac05-1aaea7b5445f";
 
@@ -164,8 +170,10 @@
     { amount: "119840", link: "https://link.tinkoff.ru/7zRt40FIyrR" }
   ];
 
+  // Сортировка по цене
   tbankCredits.sort((a, b) => Number(a.amount) - Number(b.amount));
 
+  // Цвета для карточек Т-банка
   const colors = ['#FFE4E1', '#E0FFFF', '#F0FFF0', '#FFFACD', '#E6E6FA', '#FFDAB9', '#F0F8FF', '#FFF0F5'];
 
   function createCard(title, image, link, color) {
@@ -181,7 +189,7 @@
     `;
   }
 
-  // Рендер
+  // Наполнение контентом
   document.getElementById('tbank-noprice').innerHTML = createCard("ЛЮБАЯ СУММА", "NoPriceTbank.jpg", tbankLinkNoPrice, "#fff");
   document.getElementById('otp-noprice').innerHTML = createCard("ЛЮБАЯ СУММА", "NoPriceOTPbank.jpg", otpLinkNoPrice, "#fff");
 
@@ -190,7 +198,7 @@
     tbankPricedArea.innerHTML += createCard(c.amount + " ₽", c.amount + ".jpg", c.link, colors[i % colors.length]);
   });
 
-  // Переключение вкладок
+  // Функция переключения банков
   function showBank(bank) {
     document.querySelectorAll('.bank-section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -200,10 +208,11 @@
     window.scrollTo(0,0);
   }
 
+  // Копирование
   function copyLink(link, btn) {
     navigator.clipboard.writeText(link).then(() => {
       const oldText = btn.innerText;
-      btn.innerText = "✅ Готово";
+      btn.innerText = "✅ Скопировано";
       setTimeout(() => btn.innerText = oldText, 1500);
     });
   }
