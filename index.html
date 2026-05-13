@@ -115,7 +115,6 @@
 
 <header>Кредит Т-Банк</header>
 
-<!-- Сюда с помощью JavaScript добавятся все цветные карточки -->
 <div class="container" id="cards-container"></div>
 
 <script>
@@ -138,7 +137,10 @@
     { amount: "119840", link: "https://link.tinkoff.ru/7zRt40FIyrR" }
   ];
 
-  // Массив разных приятных цветов для фона блоков (чтобы не путать их)
+  // СОРТИРОВКА: выстраиваем массив по увеличению суммы
+  credits.sort((a, b) => Number(a.amount) - Number(b.amount));
+
+  // Массив разных приятных цветов для фона блоков
   const colors = [
     '#FFE4E1', // Розоватый
     '#E0FFFF', // Голубоватый
@@ -152,17 +154,14 @@
 
   const container = document.getElementById('cards-container');
 
-  // Перебираем список и создаем HTML для каждой карточки
+  // Перебираем отсортированный список и создаем HTML для каждой карточки
   credits.forEach((credit, index) => {
-    // Берем цвет из массива по очереди
     const bgColor = colors[index % colors.length];
     
     const card = document.createElement('div');
     card.className = 'card';
     card.style.backgroundColor = bgColor;
 
-    // Вставляем структуру карточки
-    // onerror нужен, чтобы если фото нет, показывался серый квадрат с текстом "Нет фото", а не сломанная картинка
     card.innerHTML = `
       <div class="card-title">${credit.amount} РУБЛЕЙ</div>
       <img src="${credit.amount}.jpg" alt="QR ${credit.amount}" class="qr-image" 
@@ -179,12 +178,10 @@
   // Функция для копирования ссылки в буфер обмена
   function copyLink(link, btnElement) {
     navigator.clipboard.writeText(link).then(() => {
-      // Меняем текст и цвет кнопки, чтобы показать, что скопировалось
       const originalText = btnElement.innerText;
       btnElement.innerText = '✅ Скопировано!';
       btnElement.style.backgroundColor = '#4CAF50'; 
       
-      // Возвращаем как было через 2 секунды
       setTimeout(() => {
         btnElement.innerText = originalText;
         btnElement.style.backgroundColor = ''; 
